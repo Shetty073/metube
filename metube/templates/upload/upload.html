@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% block title %}Upload - Me Tube{% endblock title %}
+{% block content %}
+
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-12">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h4 class="card-title">Upload Content</h4>
+                  <p class="card-text">
+                    <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="content-title-input" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="content-title-input" name="content_title" placeholder="Post title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="content-description-input" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="content-description-input" name="content_description" placeholder="Describe the content" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="file-input" class="form-label">File</label>
+                            <input type="file" class="form-control" id="file-input" name="file" placeholder="File" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="content-type-input" class="form-label">Content Type</label>
+                            <select class="form-select" aria-label="Content Type" id="content-type-input" name="content_type" required>
+                                <option value="video">Video</option>
+                                <option value="music">Music</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="category-input" class="form-label">Category</label>
+                            <div class="input-group">
+                                <select class="form-select flex-nowrap" aria-label="Category" id="category-input" name="category" multiple required>
+                                    {% for category in categories %}
+                                    <option value="{{ category.pk }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="button" class="btn btn-success input-group-text" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tags-input" class="form-label">Tags</label>
+                            <div class="input-group">
+                                <select class="form-select" aria-label="Tags" id="tags-input" name="tags" multiple required>
+                                    {% for tag in tags %}
+                                        {% if tag.tag_type == 'content' %}
+                                            <option value="{{ tag.pk }}">{{ tag.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <button type="button" class="btn btn-success input-group-text" data-bs-toggle="modal" data-bs-target="#tagModal">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stars-input" class="form-label">Stars</label>
+                            <div class="input-group">
+                                <select class="form-select" aria-label="Stars" id="stars-input" name="stars" multiple required>
+                                    {% for star in stars %}
+                                    <option value="{{ star.pk }}">{{ star.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="button" class="btn btn-success input-group-text" data-bs-toggle="modal" data-bs-target="#performermodal">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                        {% if messages %}
+                        <div class="mb-3">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="mb-3">`
+                            <button type="submit" class="btn btn-success">Upload Content</button>
+                            <button type="reset" class="btn btn-outline-danger">Clear</button>
+                        </div>
+                    </form>
+                  </p>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </main>
+    <br>
+
+    <!-- Category Modal -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="categoryModalLabel">Add new category</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'category' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="category-name-input" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="category-name-input" name="category_name" placeholder="Category name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category-description-input" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="category-description-input" name="category_description" placeholder="Describe the category" required>
+                    </div>
+                    
+                    {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="mb-3">`
+                        <button type="submit" class="btn btn-success">Add Category</button>
+                        <button type="reset" class="btn btn-outline-danger">Clear</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Tag Modal -->
+    <div class="modal fade" id="tagModal" tabindex="-1" aria-labelledby="tagModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="tagModalLabel">Add new tag</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'tag' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="tag-name-input" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="tag-name-input" name="tag_name" placeholder="Tag name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tag-type-input" class="form-label">Tag type</label>
+                        <select class="form-select" aria-label="Tag type" id="tag-type-input" name="tag_type" required>
+                            {% for tag_type in tag_types %}
+                                <option value="{{ tag_type.0 }}">{{ tag_type.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="mb-3">`
+                        <button type="submit" class="btn btn-success">Add tag</button>
+                        <button type="reset" class="btn btn-outline-danger">Clear</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Star Modal -->
+    <div class="modal fade" id="performermodal" tabindex="-1" aria-labelledby="performermodalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="performermodalLabel">Add new star</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'star' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="star-name-input" class="form-label">Star name</label>
+                        <input type="text" class="form-control" id="star-name-input" name="star_name" placeholder="Star name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="star-bio-input" class="form-label">Bio</label>
+                        <input type="text" class="form-control" id="star-bio-input" name="star_bio" placeholder="Star bio" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="star-dob-input" class="form-label">Dob</label>
+                        <input type="date" class="form-control" id="star-dob-input" name="star_dob" placeholder="Star dob" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="star-music-input" class="form-label">Star photo</label>
+                        <input type="file" class="form-control" id="star-music-input" name="star_image" placeholder="Star music" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="breast-size-input" class="form-label">Breast size</label>
+                        <input type="number" class="form-control" id="breast-size-input" name="breast_size" placeholder="Breast size" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cup-size-input" class="form-label">Cup size</label>
+                        <input type="text" class="form-control" id="cup-size-input" name="cup_size" placeholder="Cup size" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="waist-size-input" class="form-label">Waist size</label>
+                        <input type="number" class="form-control" id="waist-size-input" name="waist_size" placeholder="Waist size" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ass-size-input" class="form-label">Ass size</label>
+                        <input type="number" class="form-control" id="ass-size-input" name="ass_size" placeholder="Ass size" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="star-tags-input" class="form-label">Star tags</label>
+                        <div class="input-group">
+                            <select class="form-select" aria-label="Star Tags" id="star-tags-input" name="star_tags" multiple required>
+                                {% for tag in tags %}
+                                    {% if tag.tag_type == 'star' %}
+                                        <option value="{{ tag.pk }}">{{ tag.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <button type="button" class="btn btn-success input-group-text" data-bs-toggle="modal" data-bs-target="#tagModal">
+                                +
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="mb-3">`
+                        <button type="submit" class="btn btn-success">Add star</button>
+                        <button type="reset" class="btn btn-outline-danger">Clear</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+    </div>
+
+{% endblock content %}

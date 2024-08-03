@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %} Me Tube {% endblock title %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
+    <style>
+        .active-nav {
+            background-color: #004ec4 !important;
+        }
+
+        .thumbnail {
+          max-width: 30vw !important;
+        }
+
+        .thumbnail-title {
+          font-size: small !important;
+          font-weight: bold !important;
+          padding-left: 1.5vw;
+          padding-right: 1vw;
+        }
+        
+        .video-player {
+          width: 100% !important;
+          height: 60vh !important;
+        }
+
+        .uploader-name {
+          font-size: smaller;
+        }
+
+        .player-description {
+          width: 100% !important;
+          height: 100% !important;
+        }
+
+        .content-description {
+          font-weight: bold;
+        }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div class="d-flex flex-column flex-lg-row" style="min-height: 100vh;">
+      <!-- Sidebar -->
+      {% if user.is_authenticated %}
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary flex-shrink-0 flex-lg-column p-3">
+        <a class="navbar-brand mx-3 my-2" href="#">Me Tube</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse flex-lg-column" id="sidebarMenu">
+          <ul class="nav nav-pills flex-column mt-3">
+            <li class="nav-item">
+              <a class="nav-link text-white {% if '/videos/' in request.path %} active-nav {% endif %}" href="{% url 'videos' %}">
+                Videos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white {% if '/music/' in request.path %} active-nav {% endif %}" href="{% url 'music' %}">
+                Music
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white {% if '/upload/' in request.path %} active-nav {% endif %}" href="{% url 'upload' %}">
+                Uploads
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white {% if '/user/' in request.path %} active-nav {% endif %}" href="{% url 'user' %}">
+                Users
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      {% endif %}
+
+      <!-- Main content -->
+      <div class="flex-grow-1">
+        <!-- Top navbar -->
+        {% if user.is_authenticated %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Welcome, {{ user.first_name }}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar" aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="topNavbar">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="btn btn-outline-info me-2" href="#">Profile</a>
+                </li>
+                  <li class="nav-item">
+                  <form action="{% url 'signout' %}" method="post" style="display: inline;">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">Logout</button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        {% endif %}
+
+        <!-- Main content area -->
+        <div class="container mt-4">
+          {% comment %} <div class="row">
+            <div class="col-12">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h4 class="card-title">Welcome to Me Tube</h4>
+                  <p class="card-text">This is your dashboard. Use the sidebar to navigate through different sections.</p>
+                </div>
+              </div>
+            </div>
+          </div> {% endcomment %}
+
+          {% block content %}
+          {% endblock content %}
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
+    <script>
+      $( 'select' ).select2( {
+          theme: 'bootstrap-5'
+      } );
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script> 
+    {% block scripts %}
+    {% endblock scripts %}
+  </body>
+</html>

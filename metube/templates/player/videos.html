@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Videos - Me Tube{% endblock title %}
+{% block content %}
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-12">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h4 class="card-title">Your Videos</h4>
+                  <p class="card-text">
+                    <div class="d-flex flex-wrap">
+                      {% for content in contents %}
+                        <div class="row thumbnail">
+                          <a href="{% url 'videos' %}?watch={{ content.pk }}">
+                            <img src="{{ content.thumbnail.url }}" class="img-thumbnail" alt="{{ content.title }}">
+                          </a>
+                          <div class="text-wrap thumbnail-title">{{ content.title }}</div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </main>
+    <br>
+{% endblock content %}

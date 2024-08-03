@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}Videos - Me Tube{% endblock title %}
+{% block content %}
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-12">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h4 class="card-title">{{ content.title }}
+                    {% for tag in tags %}
+                        <span style="font-size: 1vw;">
+                            {% if tag.name == 'dark-comedy' %}
+                                - contains <a href="#" data-bs-toggle="tooltip" data-bs-title="This content has instances of dark humour">{{ tag.name }}</a> 💣
+                            {% elif tag.name == 'jump-scares' %}
+                                - contains <a href="#" data-bs-toggle="tooltip" data-bs-title="Contains jumpscares">{{ tag.name }}</a> 🍦
+                            {% endif %}
+                        </span>
+                    {% endfor %}
+                  </h4>
+                  <p class="card-text">
+                    <div class="player">
+                        <video src="{{ content.file.url }}" class="object-fit-contain video-js video-player" 
+                        controls poster="{{ content.thumbnail.url }}"></video>
+                    </div>
+                    <div class="player-description">
+                        <div class="row mb-2">
+                            <div>
+                                <span class="uploader-name float-end">By: {{ content.uploaded_by.username }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <span class="content-description">
+                                    What is this about?
+                                </span>
+                                <span>
+                                    {{ content.description }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="content-description">
+                                        Who plays what?
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row flex-wrap">
+                                {% for star in stars %}
+                                    <div class="col-4">
+                                        <div class="row" style="margin-left: 0px;">
+                                            <img src="{{ star.photo.url }}" class="img-thumbnail" alt="{{ star.name }}">
+                                        </div>
+                                        <div class="row ms-1">
+                                            <div class="col-4 content-description mb-2">
+                                                Name: 
+                                            </div>
+                                            <div class="col-8">
+                                                {{ star.name }}
+                                            </div>
+                                        </div>
+                                        <div class="row ms-1">
+                                            <div class="col-4 content-description mb-2">
+                                                Bio: 
+                                            </div>
+                                            <div class="col-8">
+                                                {{ star.bio }}
+                                            </div>
+                                        </div>
+                                        <div class="row ms-1">
+                                            <div class="col-6 content-description mb-2">
+                                                Age: 
+                                            </div>
+                                            <div class="col-6">
+                                                {{ star.age }}
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="content-description">
+                                        What are others saying about this?
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row flex-wrap">
+                                
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="content-description">
+                                        This content has:
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row flex-wrap">
+                                {% for category in categories %}
+                                    <div class="col-12">
+                                        <span class="badge text-bg-success">{{ category.name }} </span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="content-description">
+                                        This content contains:
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row flex-wrap">
+                                {% for tag in tags %}
+                                    <div class="col-12">
+                                        <span class="badge text-bg-danger">{{ tag.name }} </span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </main>
+    <br>
+{% endblock content %}
